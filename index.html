@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1f3864">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="일본어 100">
+<title>일본어 100문장 · 출퇴근 듣기</title>
+<style>
+:root{--bg:#f4f6fa;--card:#fff;--ink:#1b1f2a;--sub:#5d6575;--mute:#8a92a3;--line:#dde2ea;--acc:#1f5fbf;--acc-bg:#e7effb;--ok:#1d7a4a;--ok-bg:#e3f4ea;--warn:#8a5a00;--warn-bg:#fdf1d8;--btn:#fff;--btn-line:#9aa6ba;--btn-shadow:0 2px 0 #b9c2d1;--pri:#1f3864;--on-pri:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#12151c;--card:#1b2029;--ink:#eef1f6;--sub:#aab2c0;--mute:#7d8698;--line:#2c3340;--acc:#7fb0ff;--acc-bg:#1d2b44;--ok:#7fd6a3;--ok-bg:#183326;--warn:#f1c46b;--warn-bg:#3a2f15;--btn:#252c38;--btn-line:#5b6578;--btn-shadow:0 2px 0 #0a0c10;--pri:#7fb0ff;--on-pri:#0d1420}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Hiragino Sans","Yu Gothic","Noto Sans KR","Noto Sans JP",sans-serif}
+.wrap{max-width:540px;margin:0 auto;padding:12px 14px calc(210px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:4px 0 10px}
+h1{font-size:18px;margin:0;font-weight:700;flex:1;white-space:nowrap}
+/* 버튼: 테두리 + 그림자 + 눌림 효과로 '누르는 것'임을 분명히 */
+button{font:inherit;color:var(--ink);background:var(--btn);border:1.5px solid var(--btn-line);border-radius:10px;box-shadow:var(--btn-shadow);padding:8px 12px;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;touch-action:manipulation}
+button:active{transform:translateY(2px);box-shadow:none}
+button.on{background:var(--pri);color:var(--on-pri);border-color:var(--pri)}
+button.pri{background:var(--pri);color:var(--on-pri);border-color:var(--pri)}
+button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+/* 상태 표시: 테두리·그림자 없는 납작한 꼬리표 */
+.pill{display:inline-block;font-size:12px;padding:3px 9px;border-radius:999px;background:var(--acc-bg);color:var(--acc);white-space:nowrap}
+.pill.ok{background:var(--ok-bg);color:var(--ok)}.pill.warn{background:var(--warn-bg);color:var(--warn)}
+.label{font-size:12px;color:var(--mute);margin:0 2px 6px}
+.seg{display:flex;gap:6px;margin-bottom:8px}.seg button{flex:1;padding:6px 4px;font-size:13px;min-height:38px}
+.dayrow{display:flex;align-items:center;gap:8px;margin-bottom:10px}.dayrow .d{flex:1;text-align:center;font-weight:700}
+.prog{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:4px 0 4px}.prog i{display:block;height:100%;background:var(--ok);width:0}
+.progtxt{display:flex;justify-content:space-between;font-size:12px;color:var(--sub);margin-bottom:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px 18px;min-height:250px}
+.ctop{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.no{font-weight:800;color:var(--acc);font-size:15px}
+.chname{font-size:12px;color:var(--mute);margin-bottom:10px}
+.jp{font-size:30px;font-weight:700;line-height:1.35;word-break:keep-all;font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP","Noto Sans CJK JP",sans-serif}
+.rd{font-size:15px;color:var(--sub);margin-top:4px;font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP",sans-serif}
+.ko{font-size:19px;font-weight:600;margin-top:12px}
+.tip{font-size:13px;color:var(--sub);border-top:1px dashed var(--line);margin-top:12px;padding-top:9px;line-height:1.55}
+.hide{visibility:hidden}
+.hint{font-size:12px;color:var(--mute);text-align:center;margin-top:8px}
+.dots{display:inline-flex;gap:4px;align-items:center}.dots b{width:9px;height:9px;border-radius:50%;background:var(--line)}.dots b.f{background:var(--ok)}
+.player{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 14px calc(12px + env(safe-area-inset-bottom));z-index:5}
+.pin{max-width:540px;margin:0 auto}
+.seek{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--mute);font-variant-numeric:tabular-nums}
+.seek input{flex:1;accent-color:var(--acc)}
+.ctrl{display:flex;justify-content:space-between;align-items:center;margin:8px 0}
+.ctrl .big{width:68px;height:68px;border-radius:50%}.ctrl .big svg{width:30px;height:30px}
+.ctrl .mid{width:54px;height:54px;border-radius:50%;padding:0}
+.ctrl .sm{width:56px;height:52px;padding:0;flex-direction:column;gap:0;font-size:11px;border-radius:12px}.ctrl .sm svg{width:18px;height:18px}
+.opts{display:flex;gap:6px}.opts button{flex:1;font-size:12.5px;padding:6px 2px;min-height:36px;white-space:nowrap}
+.list{margin-top:14px}.list h3{font-size:13px;color:var(--sub);margin:16px 2px 6px}
+.li{display:flex;align-items:center;gap:10px;width:100%;text-align:left;justify-content:flex-start;margin-bottom:6px;min-height:46px;font-size:15px}
+.li .n{color:var(--acc);font-weight:700;font-size:13px;width:30px}.li .t{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.li.cur{outline:2px solid var(--acc);outline-offset:1px}
+.toast{position:fixed;left:50%;top:14px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:10px;font-size:13px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:9;max-width:90%}
+.toast.show{opacity:.95}
+.setup{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:12px;font-size:13.5px;line-height:1.6;color:var(--sub)}
+.setup b{color:var(--ink)}
+details{margin-top:18px;font-size:13px;color:var(--sub)}summary{cursor:pointer;padding:6px 0}
+details p{margin:6px 0;line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>일본어 100문장</h1>
+  <span id="audioPill" class="pill warn">음원 없음</span>
+  <button id="loadBtn" type="button">
+    <svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>음원 불러오기</button>
+  <input id="fileIn" type="file" accept=".mp3,audio/mpeg,audio/*" multiple hidden>
+</header>
+
+<div id="setup" class="setup" hidden>
+  <b>처음 한 번만:</b> [음원 불러오기]를 누르고 MP3를 모두 선택하세요. 본문(001~100)과 일본어만(T001~T100)을 한꺼번에 골라도 됩니다. 음원은 이 휴대폰 브라우저에만 저장되고, 다음부터는 바로 재생됩니다.
+</div>
+
+<div class="label">듣는 범위</div>
+<div class="seg" id="scopeSeg">
+  <button type="button" data-v="day">오늘 5문장</button>
+  <button type="button" data-v="all">전체 100</button>
+  <button type="button" data-v="todo">안 끝난 것</button>
+</div>
+<div class="dayrow" id="dayRow">
+  <button type="button" id="dayPrev" aria-label="이전 날"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div class="d" id="dayTxt">Day 1</div>
+  <button type="button" id="dayNext" aria-label="다음 날"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  <button type="button" id="reviewBtn">전날 복습</button>
+</div>
+<div class="prog"><i id="progBar"></i></div>
+<div class="progtxt"><span id="progTxt">완료 0/100</span><span id="posTxt">1 / 5</span></div>
+
+<div class="card" id="card">
+  <div class="ctop"><span class="no" id="cNo">001</span><span class="dots" id="cDots" title="서로 다른 날 3번 체크하면 완료"></span></div>
+  <div class="chname" id="cCh"></div>
+  <div class="jp" id="cJp"></div>
+  <div class="rd" id="cRd"></div>
+  <div class="ko" id="cKo"></div>
+  <div class="tip" id="cTip"></div>
+</div>
+<div class="hint" id="cardHint">가려진 글자는 카드를 누르면 잠깐 보입니다</div>
+
+<div class="label" style="margin-top:14px">글자 보기</div>
+<div class="seg" id="viewSeg">
+  <button type="button" data-v="all">전부 보기</button>
+  <button type="button" data-v="jp">일본어 글자</button>
+  <button type="button" data-v="ko">뜻만</button>
+  <button type="button" data-v="none">숨기기</button>
+</div>
+
+<div class="list">
+  <button type="button" id="listBtn" style="width:100%">
+    <svg viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg><span id="listBtnTxt">문장 목록 펼치기</span></button>
+  <div id="list" hidden></div>
+</div>
+
+<details>
+  <summary>사용법 · 설정</summary>
+  <p><b>한 문장 듣는 순서:</b> ① 숨기기로 그냥 듣기 → ② 전부 보기로 보면서 듣기 → ③ 보면서 따라 말하기 → ④ 숨기기로 안 보고 따라 말하기. ④가 되면 [체크]를 누르세요.</p>
+  <p><b>체크:</b> 하루에 한 번씩, 서로 다른 날 3번 체크하면 그 문장은 완료(●●●)입니다. 같은 날 다시 누르면 오늘 체크가 취소됩니다.</p>
+  <p><b>음성:</b> [한+일 음성]은 본문 음원(한국어 설명 포함), [일본어 음성]은 청취훈련용(일본어만) 음원을 재생합니다. [반복]은 한 문장을 몇 번 들은 뒤 넘어갈지 정합니다.</p>
+  <p><b>잠금 화면:</b> 화면을 꺼도 계속 재생되고, 잠금 화면이나 이어폰 버튼으로 이전·다음 문장으로 넘어갑니다.</p>
+  <p><b>아이폰:</b> 사파리에서 공유 → [홈 화면에 추가]로 앱처럼 쓰면 저장된 음원이 잘 지워지지 않습니다.</p>
+  <p><button type="button" id="clearBtn">저장된 음원 지우기</button> <button type="button" id="resetBtn">체크 기록 초기화</button></p>
+</details>
+</div>
+
+<div class="player"><div class="pin">
+  <div class="seek"><span id="tCur">0:00</span><input id="seek" type="range" min="0" max="1000" value="0" aria-label="재생 위치"><span id="tDur">0:00</span></div>
+  <div class="ctrl">
+    <button type="button" class="sm" id="repBtn" aria-label="반복 횟수"><svg viewBox="0 0 24 24"><path d="M4 12V9a3 3 0 0 1 3-3h12l-3-3M20 12v3a3 3 0 0 1-3 3H5l3 3"/></svg><span id="repTxt">반복 1</span></button>
+    <button type="button" class="mid" id="prevBtn" aria-label="이전 문장"><svg viewBox="0 0 24 24"><path d="M6 5v14M19 5l-10 7 10 7z"/></svg></button>
+    <button type="button" class="big pri" id="playBtn" aria-label="재생"><svg viewBox="0 0 24 24" id="playIco"><path d="M7 4l13 8-13 8z"/></svg></button>
+    <button type="button" class="mid" id="nextBtn" aria-label="다음 문장"><svg viewBox="0 0 24 24"><path d="M18 5v14M5 5l10 7-10 7z"/></svg></button>
+    <button type="button" class="sm" id="chkBtn" aria-label="오늘 체크"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg><span id="chkTxt">체크</span></button>
+  </div>
+  <div class="opts">
+    <button type="button" id="setK" data-v="K">한+일 음성</button>
+    <button type="button" id="setJ" data-v="J">일본어 음성</button>
+    <button type="button" id="spdBtn">속도 1.0×</button>
+    <button type="button" id="autoBtn">자동 넘김</button>
+  </div>
+</div></div>
+<div class="toast" id="toast"></div>
+<audio id="au" preload="auto"></audio>
+
+<script>
+const DATA={"chs":["Chapter 01. 일본인이 툭하면 쓰는 입버릇 표현","Chapter 02. 인사 및 자기소개","Chapter 03. 감정 · 성격 · 외모","Chapter 04. 일상생활 일본어 표현","Chapter 05. 두근두근 해외여행","Chapter 06. 식사 및 음주","Chapter 07. 쇼핑 꿀팁 일본어","Chapter 08. 연애말고 결혼","Chapter 09. 학교 및 회사","Chapter 10. 인터넷 · 스마트폰 · 유행어"],"items":[{"n":1,"c":0,"jp":"さすが！","rd":"","ko":"역시!","tip":"상대를 칭찬할 때 \"역시 (대단해)\". さすが＋이름 형태로도 자주 씀."},{"n":2,"c":0,"jp":"かわいい！","rd":"","ko":"귀여워!","tip":"사람·동물·물건 어디에나 쓰는 만능 칭찬."},{"n":3,"c":0,"jp":"びっくりした！","rd":"","ko":"깜짝이야!","tip":"びっくりする(놀라다)의 과거형."},{"n":4,"c":0,"jp":"やった！","rd":"","ko":"앗싸!","tip":"やる(하다)의 과거형. 기쁠 때 나오는 감탄사."},{"n":5,"c":0,"jp":"あの…","rd":"","ko":"저…","tip":"말을 걸거나 망설일 때 쓰는 \"저기…\"."},{"n":6,"c":0,"jp":"そうですね。","rd":"","ko":"그러네요.","tip":"맞장구. 끝을 내리면 동의, 길게 끌면 \"글쎄요\"."},{"n":7,"c":0,"jp":"あなたのことが 好きです。","rd":"あなたのことが すきです","ko":"당신을 좋아해요.","tip":"好き 앞에는 を가 아니라 が. ～のこと는 사람을 부드럽게 가리킴."},{"n":8,"c":0,"jp":"え？！","rd":"","ko":"뭐?!","tip":"놀라거나 되물을 때. 끝을 올려 발음."},{"n":9,"c":0,"jp":"やばい！","rd":"","ko":"큰일 났다!","tip":"원래 \"위험하다\". 요즘은 \"대박\"이라는 좋은 뜻으로도 씀."},{"n":10,"c":0,"jp":"別に。","rd":"べつに","ko":"딱히.","tip":"\"딱히 (아무것도 아냐)\". 퉁명스럽게 들릴 수 있음."},{"n":11,"c":1,"jp":"こんにちは。","rd":"","ko":"안녕하세요.","tip":"낮 인사. 끝의 は는 '와'로 읽음."},{"n":12,"c":1,"jp":"久しぶり。","rd":"ひさしぶり","ko":"오랜만이야.","tip":"정중하게는 お久しぶりです。"},{"n":13,"c":1,"jp":"またね！","rd":"","ko":"또 보자!","tip":"친구와 헤어질 때. 정중하게는 また 会いましょう。"},{"n":14,"c":1,"jp":"はじめまして。","rd":"","ko":"처음 뵙겠습니다.","tip":"첫 만남의 첫마디. 뒤에 よろしく お願いします를 붙임."},{"n":15,"c":1,"jp":"ミナと 申します。","rd":"ミナと もうします","ko":"미나라고 합니다.","tip":"申す는 言う의 겸양어. ～と 言います보다 공손함."},{"n":16,"c":1,"jp":"会社員です。","rd":"かいしゃいんです","ko":"회사원이에요.","tip":"직업＋です. 学生です(학생이에요) 등으로 바꿔 연습."},{"n":17,"c":1,"jp":"趣味は なんですか。","rd":"しゅみは なんですか","ko":"취미는 뭐예요?","tip":"대답은 趣味は ～です。"},{"n":18,"c":1,"jp":"ありがとう。","rd":"","ko":"고마워.","tip":"정중하게는 ありがとう ございます。"},{"n":19,"c":1,"jp":"おめでとう！","rd":"","ko":"축하해!","tip":"생일 축하는 お誕生日 おめでとう！"},{"n":20,"c":1,"jp":"お前のせいじゃないよ。","rd":"おまえのせいじゃないよ","ko":"네 탓이 아니야.","tip":"～のせい = ~의 탓. お前는 친한 사이의 거친 말투."},{"n":21,"c":2,"jp":"うれしい！","rd":"","ko":"기뻐!","tip":"い형용사. 과거형은 うれしかった。"},{"n":22,"c":2,"jp":"悲しい。","rd":"かなしい","ko":"슬퍼.","tip":"い형용사. \"슬펐어\"는 悲しかった。"},{"n":23,"c":2,"jp":"バカに しないで！","rd":"","ko":"바보 취급하지 마!","tip":"バカに する = 바보 취급하다. ～ないで = ~하지 마."},{"n":24,"c":2,"jp":"図々しい！","rd":"ずうずうしい","ko":"뻔뻔하네!","tip":"염치없는 사람에게 하는 말."},{"n":25,"c":2,"jp":"童顔ですね。","rd":"どうがんですね","ko":"동안이네요.","tip":"끝의 ね는 상대에게 공감을 구하는 말투."},{"n":26,"c":2,"jp":"最近 太った。","rd":"さいきん ふとった","ko":"요즘 살쪘어.","tip":"太る(살찌다)의 과거형. 반대는 やせた(살 빠졌다)."},{"n":27,"c":2,"jp":"私じゃない！","rd":"わたしじゃない","ko":"내가 아니야!","tip":"명사＋じゃない = ~가 아니다."},{"n":28,"c":2,"jp":"うざい！","rd":"","ko":"짜증 나!","tip":"친한 사이에서만 쓰는 속어."},{"n":29,"c":2,"jp":"あの人、大嫌い。","rd":"あのひと、だいきらい","ko":"저 사람 진짜 싫어.","tip":"大＋嫌い = 아주 싫다. 반대는 大好き."},{"n":30,"c":2,"jp":"怖い！","rd":"こわい","ko":"무서워!","tip":"사람·영화·상황 모두에 씀."},{"n":31,"c":3,"jp":"もしもし。","rd":"","ko":"여보세요.","tip":"전화를 걸고 받을 때."},{"n":32,"c":3,"jp":"映画 見に 行かない？","rd":"えいが みに いかない","ko":"영화 보러 안 갈래?","tip":"동사 ます형＋に 行く = ~하러 가다. ～ない？로 권유."},{"n":33,"c":3,"jp":"辛い！","rd":"からい","ko":"매워!","tip":"같은 한자를 つらい(괴롭다)로도 읽음."},{"n":34,"c":3,"jp":"明日、会いませんか。","rd":"あした、あいませんか","ko":"내일 만나지 않을래요?","tip":"～ませんか = 정중한 권유. \"친구를 만나다\"는 友達に 会う."},{"n":35,"c":3,"jp":"早く しろ！","rd":"はやく しろ","ko":"빨리 해!","tip":"しろ는 する의 명령형. 거친 말투."},{"n":36,"c":3,"jp":"片付けなさい！","rd":"かたづけなさい","ko":"정리해!","tip":"～なさい = 부모·선생님이 쓰는 지시형."},{"n":37,"c":3,"jp":"熱が あります。","rd":"ねつが あります","ko":"열이 있어요.","tip":"병원에서 증상 말하기. 頭が 痛いです(머리가 아파요)도 함께."},{"n":38,"c":3,"jp":"振り込みしたいんですが。","rd":"ふりこみしたいんですが","ko":"이체하고 싶은데요.","tip":"～たいんですが = \"~하고 싶은데요\" 부탁의 말머리."},{"n":39,"c":3,"jp":"写真のように して ください。","rd":"しゃしんのように して ください","ko":"사진처럼 해 주세요.","tip":"미용실에서. ～のように = ~처럼."},{"n":40,"c":3,"jp":"運転、うまいね！","rd":"うんてん、うまいね","ko":"운전 잘하네!","tip":"うまい = 잘하다(上手와 같은 뜻)."},{"n":41,"c":4,"jp":"毛布 ください。","rd":"もうふ ください","ko":"담요 주세요.","tip":"명사＋ください = ~주세요. 기내에서."},{"n":42,"c":4,"jp":"空港バスは どこで 乗れますか。","rd":"くうこうバスは どこで のれますか","ko":"공항버스는 어디에서 타나요?","tip":"乗る→乗れる(탈 수 있다). 탈것은 に 乗る."},{"n":43,"c":4,"jp":"お湯が 出ません。","rd":"おゆが でません","ko":"더운물이 안 나와요.","tip":"호텔 프런트에 문제 알리기. 出る = 나오다."},{"n":44,"c":4,"jp":"すみません。","rd":"","ko":"실례합니다.","tip":"사과·감사·점원 부르기까지 되는 만능 표현."},{"n":45,"c":4,"jp":"パスポートを なくしました。","rd":"","ko":"여권을 잃어버렸어요.","tip":"なくす = 잃어버리다."},{"n":46,"c":4,"jp":"これ、ください。","rd":"","ko":"이거 주세요.","tip":"손가락으로 가리키며 주문할 때."},{"n":47,"c":4,"jp":"これは 頼んでません。","rd":"これは たのんでません","ko":"이건 안 시켰어요.","tip":"頼む = 주문하다. ～てません은 ～ていません의 준말."},{"n":48,"c":4,"jp":"写真 撮っても いいですか。","rd":"しゃしん とっても いいですか","ko":"사진 찍어도 되나요?","tip":"～ても いいですか = ~해도 되나요?"},{"n":49,"c":4,"jp":"新宿駅まで 行きますか。","rd":"しんじゅくえきまで いきますか","ko":"신주쿠역까지 가나요?","tip":"버스·택시 확인. まで = ~까지."},{"n":50,"c":4,"jp":"誰か 助けて ください！","rd":"だれか たすけて ください","ko":"누가 좀 도와주세요!","tip":"긴급 상황. ～て ください = ~해 주세요."},{"n":51,"c":5,"jp":"お腹 すいた。","rd":"おなか すいた","ko":"배고파.","tip":"정중하게는 お腹が すきました。"},{"n":52,"c":5,"jp":"店内です。","rd":"てんないです","ko":"가게에서 먹을 거예요.","tip":"\"드시고 가세요?\"에 대한 대답. 포장은 持ち帰りです。"},{"n":53,"c":5,"jp":"おいしい。","rd":"","ko":"맛있어.","tip":"남성은 うまい도 자주 씀."},{"n":54,"c":5,"jp":"レシピ 教えて！","rd":"レシピ おしえて","ko":"레시피 알려 줘!","tip":"教える = 가르치다·알려 주다."},{"n":55,"c":5,"jp":"ホットで ください。","rd":"","ko":"따뜻한 걸로 주세요.","tip":"차가운 것은 アイスで ください。"},{"n":56,"c":5,"jp":"サイズは どう なさいますか。","rd":"","ko":"사이즈는 어떻게 해 드릴까요?","tip":"なさる는 する의 존경어. 점원이 손님에게 쓰는 말."},{"n":57,"c":5,"jp":"乾杯！","rd":"かんぱい","ko":"건배!","tip":"잔을 들며 다 같이."},{"n":58,"c":5,"jp":"一杯 どう？","rd":"いっぱい どう","ko":"한잔 어때?","tip":"どう = 어때. 정중하게는 いかがですか。"},{"n":59,"c":5,"jp":"ここで 吐くなよ！","rd":"ここで はくなよ","ko":"여기서 토하지 마!","tip":"동사 기본형＋な = ~하지 마(강한 금지)."},{"n":60,"c":5,"jp":"割り勘に しよう。","rd":"わりかんに しよう","ko":"더치페이로 하자.","tip":"～に しよう = ~로 하자."},{"n":61,"c":6,"jp":"買い物に 行こう！","rd":"かいものに いこう","ko":"쇼핑하러 가자!","tip":"명사＋に 行く. 行こう = 가자(의지형)."},{"n":62,"c":6,"jp":"いくらですか。","rd":"","ko":"얼마예요?","tip":"가격 묻기의 기본."},{"n":63,"c":6,"jp":"これよりも 長いの ありますか。","rd":"これよりも ながいの ありますか","ko":"이것보다도 긴 것 있나요?","tip":"～より = ~보다. の = 것."},{"n":64,"c":6,"jp":"赤色が いいです。","rd":"あかいろが いいです","ko":"빨간색이 좋아요.","tip":"～が いいです = (고를 때) ~가 좋아요."},{"n":65,"c":6,"jp":"レビューを 見て 買おう！","rd":"レビューを みて かおう","ko":"리뷰를 보고 사자!","tip":"～て로 두 동작을 연결."},{"n":66,"c":6,"jp":"お会計 お願いします。","rd":"おかいけい おねがいします","ko":"계산해 주세요.","tip":"식당에서 계산을 부탁할 때."},{"n":67,"c":6,"jp":"金額が 合いませんが。","rd":"きんがくが あいませんが","ko":"금액이 안 맞는데요.","tip":"合う = 맞다. 끝을 ～が로 흐려 부드럽게 문제 제기."},{"n":68,"c":6,"jp":"返品できますか。","rd":"へんぴんできますか","ko":"반품되나요?","tip":"명사＋できますか = ~가능한가요?"},{"n":69,"c":6,"jp":"別々に 入れて ください。","rd":"べつべつに いれて ください","ko":"따로따로 넣어 주세요.","tip":"편의점·마트에서 봉투 담을 때."},{"n":70,"c":6,"jp":"こちら 温めますか。","rd":"こちら あたためますか","ko":"이거 데워 드릴까요?","tip":"편의점 도시락. 대답은 はい、お願いします。"},{"n":71,"c":7,"jp":"付き合ってる 人、いますか。","rd":"つきあってる ひと、いますか","ko":"사귀는 사람 있어요?","tip":"付き合う = 사귀다. ～てる는 ～ている의 준말."},{"n":72,"c":7,"jp":"優しくて 面白い 人が 好き。","rd":"やさしくて おもしろい ひとが すき","ko":"자상하고 재밌는 사람이 좋아.","tip":"い형용사 て형(優しい→優しくて)으로 나열."},{"n":73,"c":7,"jp":"タイプじゃないです。","rd":"","ko":"이상형이 아니에요.","tip":"タイプ = 이상형. 거절할 때."},{"n":74,"c":7,"jp":"ナンパされた。","rd":"","ko":"헌팅당했어.","tip":"ナンパする의 수동형 される."},{"n":75,"c":7,"jp":"会いたいよ！","rd":"あいたいよ","ko":"만나고 싶어!","tip":"ます형＋たい = ~하고 싶다."},{"n":76,"c":7,"jp":"もう いい！","rd":"","ko":"이제 됐어!","tip":"화가 나서 대화를 끊을 때."},{"n":77,"c":7,"jp":"浮気したでしょう？","rd":"うわきしたでしょう","ko":"바람피웠지?","tip":"でしょう를 올려 말하면 \"~했지?\" 하고 다그치는 확인."},{"n":78,"c":7,"jp":"仲直りしよう。","rd":"なかなおりしよう","ko":"화해하자.","tip":"～しよう = ~하자."},{"n":79,"c":7,"jp":"ごめん、別れよう。","rd":"ごめん、わかれよう","ko":"미안, 헤어지자.","tip":"別れる = 헤어지다. 의지형 別れよう."},{"n":80,"c":7,"jp":"夫婦喧嘩しました。","rd":"ふうふげんかしました","ko":"부부 싸움 했어요.","tip":"喧嘩(けんか)가 앞말과 붙으면 げんか로 읽음."},{"n":81,"c":8,"jp":"出席を 取ります。","rd":"しゅっせきを とります","ko":"출석을 부르겠습니다.","tip":"出席を 取る = 출석을 부르다."},{"n":82,"c":8,"jp":"成績が 上がった！","rd":"せいせきが あがった","ko":"성적이 올랐어!","tip":"上がる = 오르다. 반대는 下がる."},{"n":83,"c":8,"jp":"単位が 足りない！","rd":"たんいが たりない","ko":"학점이 모자라!","tip":"足りる(충분하다)의 부정형."},{"n":84,"c":8,"jp":"席を 外して おります。","rd":"せきを はずして おります","ko":"자리에 없습니다.","tip":"회사 전화 응대. おる는 いる의 겸양어."},{"n":85,"c":8,"jp":"用紙が 詰まって います。","rd":"ようしが つまって います","ko":"종이가 걸렸어요.","tip":"복사기·프린터. 詰まる = 막히다."},{"n":86,"c":8,"jp":"帰っても いいよ。","rd":"かえっても いいよ","ko":"퇴근해도 좋아.","tip":"～ても いい = ~해도 된다."},{"n":87,"c":8,"jp":"今日も 残業だ。","rd":"きょうも ざんぎょうだ","ko":"오늘도 야근이야.","tip":"だ는 です의 반말."},{"n":88,"c":8,"jp":"給料日 まだかな。","rd":"きゅうりょうび まだかな","ko":"월급날 아직인가.","tip":"～かな = \"~일까\" 혼잣말."},{"n":89,"c":8,"jp":"土曜日は 難しいです。","rd":"どようびは むずかしいです","ko":"토요일은 어렵습니다.","tip":"難しい로 거절을 돌려 말하는 일본식 표현."},{"n":90,"c":8,"jp":"お前は 首だ！","rd":"おまえは くびだ","ko":"자네는 해고야!","tip":"首(목)だ = 해고다."},{"n":91,"c":9,"jp":"ググれよ！","rd":"","ko":"구글링해 봐!","tip":"ググる(구글링하다)의 명령형. 가볍게 핀잔 줄 때."},{"n":92,"c":9,"jp":"ネットで 調べた。","rd":"ネットで しらべた","ko":"인터넷에서 찾았어.","tip":"調べる = 찾아보다·조사하다."},{"n":93,"c":9,"jp":"フォローして ください。","rd":"","ko":"팔로우해 주세요.","tip":"외래어＋する로 동사를 만듦."},{"n":94,"c":9,"jp":"既読スルー しないで！","rd":"きどくスルー しないで","ko":"읽고 씹지 마!","tip":"既読(읽음 표시)＋スルー(무시). 줄여서 既読スル."},{"n":95,"c":9,"jp":"スマホ 買った！","rd":"スマホ かった","ko":"스마트폰 샀어!","tip":"スマホ는 スマートフォン의 줄임말."},{"n":96,"c":9,"jp":"ケース かわいいね！","rd":"","ko":"케이스 귀엽네!","tip":"ね로 상대에게 공감 표현."},{"n":97,"c":9,"jp":"コメント 多すぎ！","rd":"コメント おおすぎ","ko":"댓글 엄청 많아!","tip":"～すぎ = 너무 ~함."},{"n":98,"c":9,"jp":"広告スキップ できない！","rd":"こうこくスキップ できない","ko":"광고 스킵이 안 돼!","tip":"명사＋できない = ~가 안 된다."},{"n":99,"c":9,"jp":"ガチで！","rd":"","ko":"진심으로!","tip":"속어 \"진짜로, 리얼로\"."},{"n":100,"c":9,"jp":"マヨラー","rd":"","ko":"마요네즈 덕후","tip":"マヨネーズ＋er. 뭐든 마요네즈를 뿌려 먹는 사람."}]};
+const $=id=>document.getElementById(id);
+const pad=n=>String(n).padStart(3,'0');
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();};
+/* ---------- 설정·진도 저장 ---------- */
+const LS='jp100_v1';
+let S={scope:'day',day:1,review:false,view:'all',set:'K',rep:1,spd:1,auto:true,cur:1,checks:{}};
+try{Object.assign(S,JSON.parse(localStorage.getItem(LS)||'{}'));}catch(e){}
+const save=()=>{try{localStorage.setItem(LS,JSON.stringify(S));}catch(e){}};
+/* ---------- 음원 저장소(IndexedDB) ---------- */
+let db=null;const have={K:new Set(),J:new Set()};
+function openDB(){return new Promise(res=>{try{const r=indexedDB.open('jp100audio',1);r.onupgradeneeded=()=>r.result.createObjectStore('a');r.onsuccess=()=>{db=r.result;res();};r.onerror=()=>res();}catch(e){res();}});}
+function idb(mode,fn){return new Promise((res,rej)=>{if(!db)return rej();const tx=db.transaction('a',mode);const st=tx.objectStore('a');const r=fn(st);tx.oncomplete=()=>res(r&&r.result);tx.onerror=()=>rej(tx.error);});}
+async function scanKeys(){have.K.clear();have.J.clear();try{const keys=await idb('readonly',s=>s.getAllKeys());(keys||[]).forEach(k=>{have[k[0]]&&have[k[0]].add(+k.slice(1));});}catch(e){}updPill();}
+function updPill(){const k=have.K.size,j=have.J.size,p=$('audioPill');
+  if(!k&&!j){p.textContent='음원 없음';p.className='pill warn';$('setup').hidden=false;}
+  else{p.textContent=(k===100&&j===100)?'음원 준비됨':'음원 '+k+'+'+j;p.className='pill ok';$('setup').hidden=true;}}
+$('loadBtn').onclick=()=>$('fileIn').click();
+$('fileIn').onchange=async e=>{
+  const files=[...e.target.files];let ok=0,skip=0;
+  if(!db){toast('이 브라우저에서는 음원을 저장할 수 없어요');return;}
+  for(const f of files){const m=f.name.match(/(T)?(\d{3})\.mp3$/i);
+    if(!m||+m[2]<1||+m[2]>100){skip++;continue;}
+    const key=(m[1]?'J':'K')+pad(+m[2]);
+    try{await idb('readwrite',s=>s.put(f,key));ok++;}catch(err){skip++;}
+    if(ok%10===0)toast('저장 중… '+ok+'/'+files.length);}
+  e.target.value='';
+  try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist();}catch(err){}
+  await scanKeys();toast(ok+'개 저장 완료'+(skip?' · 건너뜀 '+skip:''));render();};
+$('clearBtn').onclick=async()=>{try{await idb('readwrite',s=>s.clear());}catch(e){}stop();await scanKeys();toast('저장된 음원을 지웠어요');};
+$('resetBtn').onclick=()=>{if(confirm('체크 기록을 모두 지울까요?')){S.checks={};save();render();}};
+/* ---------- 재생 목록 ---------- */
+function playlist(){
+  if(S.scope==='all')return DATA.items.map(x=>x.n);
+  if(S.scope==='todo'){const l=DATA.items.filter(x=>(S.checks[x.n]||[]).length<3).map(x=>x.n);return l.length?l:[S.cur];}
+  const a=(S.day-1)*5+1,list=[];if(S.review&&S.day>1)for(let i=a-5;i<a;i++)list.push(i);
+  for(let i=a;i<a+5;i++)list.push(i);return list;}
+function ensureCur(){const l=playlist();if(!l.includes(S.cur))S.cur=l[0];return l;}
+/* ---------- 화면 ---------- */
+let peek=false;
+function render(){
+  const l=ensureCur(),it=DATA.items[S.cur-1],v=S.view;
+  $('cNo').textContent=pad(it.n);$('cCh').textContent=DATA.chs[it.c];
+  $('cJp').textContent=it.jp;$('cRd').textContent=it.rd||'';$('cRd').style.display=it.rd?'':'none';
+  $('cKo').textContent=it.ko;$('cTip').textContent='▸ '+it.tip;
+  const sj=peek||v==='all'||v==='jp',sk=peek||v==='all'||v==='ko';
+  ['cJp','cRd'].forEach(i=>$(i).classList.toggle('hide',!sj));
+  ['cKo','cTip'].forEach(i=>$(i).classList.toggle('hide',!sk));
+  $('cardHint').style.display=(v==='all')?'none':'';
+  const c=S.checks[it.n]||[];$('cDots').innerHTML=[0,1,2].map(i=>'<b class="'+(i<c.length?'f':'')+'"></b>').join('');
+  const td=c.includes(today());$('chkTxt').textContent=td?'취소':'체크';$('chkBtn').classList.toggle('on',td);
+  const done=DATA.items.filter(x=>(S.checks[x.n]||[]).length>=3).length;
+  $('progBar').style.width=done+'%';$('progTxt').textContent='완료 '+done+'/100 · 오늘 체크 '+Object.values(S.checks).filter(a=>a.includes(today())).length;
+  $('posTxt').textContent=(l.indexOf(S.cur)+1)+' / '+l.length;
+  [...$('scopeSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===S.scope));
+  [...$('viewSeg').children].forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  $('dayRow').style.display=S.scope==='day'?'':'none';
+  $('dayTxt').textContent='Day '+S.day+'  ('+pad((S.day-1)*5+1)+'–'+pad(S.day*5)+')';
+  $('reviewBtn').classList.toggle('on',S.review);
+  $('setK').classList.toggle('on',S.set==='K');$('setJ').classList.toggle('on',S.set==='J');
+  $('repTxt').textContent='반복 '+S.rep;$('spdBtn').textContent='속도 '+S.spd.toFixed(1)+'×';
+  $('autoBtn').classList.toggle('on',S.auto);$('autoBtn').textContent='자동 넘김 '+(S.auto?'켬':'끔');
+  if(!$('list').hidden)renderList();
+  save();}
+function renderList(){let h='';DATA.chs.forEach((ch,ci)=>{h+='<h3>'+ch+'</h3>';
+  DATA.items.filter(x=>x.c===ci).forEach(x=>{const k=(S.checks[x.n]||[]).length;
+    h+='<button type="button" class="li'+(x.n===S.cur?' cur':'')+'" data-n="'+x.n+'"><span class="n">'+pad(x.n)+'</span><span class="t">'+x.jp+'</span><span class="dots">'+[0,1,2].map(i=>'<b class="'+(i<k?'f':'')+'"></b>').join('')+'</span></button>';});});
+  $('list').innerHTML=h;}
+$('list').onclick=e=>{const b=e.target.closest('.li');if(!b)return;const n=+b.dataset.n;
+  if(!playlist().includes(n)){S.scope='all';}S.cur=n;loadTrack(true);window.scrollTo({top:0,behavior:'smooth'});};
+$('listBtn').onclick=()=>{const L=$('list');L.hidden=!L.hidden;$('listBtnTxt').textContent=L.hidden?'문장 목록 펼치기':'문장 목록 접기';render();};
+$('card').onclick=()=>{if(S.view==='all')return;peek=true;render();clearTimeout(window._pk);window._pk=setTimeout(()=>{peek=false;render();},3000);};
+$('scopeSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.scope=b.dataset.v;const p=playing();S.cur=playlist()[0];loadTrack(p);};
+$('viewSeg').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.view=b.dataset.v;peek=false;render();};
+$('dayPrev').onclick=()=>{if(S.day>1){S.day--;const p=playing();S.cur=playlist()[0];loadTrack(p);}};
+$('dayNext').onclick=()=>{if(S.day<20){S.day++;const p=playing();S.cur=playlist()[0];loadTrack(p);}};
+$('reviewBtn').onclick=()=>{S.review=!S.review;render();};
+/* ---------- 오디오 ---------- */
+const au=$('au');let url=null,repLeft=0,loadedKey=null;
+const playing=()=>!au.paused;
+async function getBlob(set,n){try{return await idb('readonly',s=>s.get(set+pad(n)));}catch(e){return null;}}
+async function loadTrack(autoplay){
+  render();repLeft=S.rep-1;
+  let set=S.set,blob=await getBlob(set,S.cur);
+  if(!blob){const alt=set==='K'?'J':'K';blob=await getBlob(alt,S.cur);if(blob){set=alt;toast((S.set==='K'?'한+일':'일본어')+' 음원이 없어 다른 쪽을 재생해요');}}
+  if(url){URL.revokeObjectURL(url);url=null;}
+  if(!blob){au.removeAttribute('src');au.load();loadedKey=null;updTime();if(autoplay)toast(have.K.size||have.J.size?pad(S.cur)+'번 음원이 없어요':'먼저 [음원 불러오기]를 눌러 주세요');setIco();return;}
+  url=URL.createObjectURL(blob);au.src=url;loadedKey=set+S.cur;au.playbackRate=S.spd;au.defaultPlaybackRate=S.spd;
+  setMeta();
+  if(autoplay){try{await au.play();}catch(e){}}setIco();}
+function stop(){au.pause();setIco();}
+function setIco(){$('playIco').innerHTML=playing()?'<path d="M8 5v14M16 5v14"/>':'<path d="M7 4l13 8-13 8z"/>';$('playBtn').setAttribute('aria-label',playing()?'일시정지':'재생');
+  if('mediaSession' in navigator)navigator.mediaSession.playbackState=playing()?'playing':'paused';}
+function step(d,auto){const l=playlist();let i=l.indexOf(S.cur);i=(i+d+l.length)%l.length;S.cur=l[i];loadTrack(auto);}
+$('playBtn').onclick=async()=>{if(!au.getAttribute('src')){await loadTrack(true);return;}
+  if(playing())au.pause();else{try{await au.play();}catch(e){}}setIco();};
+$('prevBtn').onclick=()=>{if(au.currentTime>3&&playing()){au.currentTime=0;return;}step(-1,playing());};
+$('nextBtn').onclick=()=>step(1,playing());
+au.onplay=au.onpause=setIco;
+au.onended=()=>{if(repLeft>0){repLeft--;au.currentTime=0;au.play().catch(()=>{});return;}
+  if(S.auto)step(1,true);else setIco();};
+$('repBtn').onclick=()=>{const r=[1,2,3,5];S.rep=r[(r.indexOf(S.rep)+1)%r.length];repLeft=S.rep-1;render();};
+$('spdBtn').onclick=()=>{const r=[0.8,0.9,1,1.1,1.2];let i=r.findIndex(x=>Math.abs(x-S.spd)<.01);S.spd=r[(i+1)%r.length];au.playbackRate=S.spd;render();};
+$('autoBtn').onclick=()=>{S.auto=!S.auto;render();};
+[$('setK'),$('setJ')].forEach(b=>b.onclick=()=>{if(S.set===b.dataset.v)return;S.set=b.dataset.v;const p=playing();loadTrack(p);});
+$('chkBtn').onclick=()=>{const n=S.cur,c=S.checks[n]||[],t=today();
+  if(c.includes(t)){S.checks[n]=c.filter(x=>x!==t);toast('오늘 체크를 취소했어요');}
+  else if(c.length>=3){toast('이미 완료한 문장이에요 ●●●');return;}
+  else{c.push(t);S.checks[n]=c;toast(c.length>=3?'완료! 서로 다른 날 3번 성공':'체크 '+c.length+'/3');}
+  render();};
+/* 재생 위치 */
+const fmt=s=>isFinite(s)?Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0'):'0:00';
+let seeking=false;
+function updTime(){$('tCur').textContent=fmt(au.currentTime||0);$('tDur').textContent=fmt(au.duration||0);
+  if(!seeking)$('seek').value=au.duration?Math.round(au.currentTime/au.duration*1000):0;}
+au.ontimeupdate=au.onloadedmetadata=updTime;
+$('seek').oninput=()=>{seeking=true;if(au.duration)$('tCur').textContent=fmt($('seek').value/1000*au.duration);};
+$('seek').onchange=()=>{if(au.duration)au.currentTime=$('seek').value/1000*au.duration;seeking=false;};
+/* 잠금 화면·이어폰 버튼 */
+function setMeta(){if(!('mediaSession' in navigator))return;const it=DATA.items[S.cur-1];
+  try{navigator.mediaSession.metadata=new MediaMetadata({title:pad(it.n)+'  '+it.jp,artist:it.ko,album:'일본어 100문장 · '+(S.set==='K'?'한+일 음성':'일본어 음성')});}catch(e){}}
+if('mediaSession' in navigator){const ms=navigator.mediaSession;const h=(a,f)=>{try{ms.setActionHandler(a,f);}catch(e){}};
+  h('play',()=>{au.play().catch(()=>{});});h('pause',()=>au.pause());
+  h('previoustrack',()=>step(-1,true));h('nexttrack',()=>step(1,true));
+  h('seekbackward',()=>{au.currentTime=Math.max(0,au.currentTime-5);});h('seekforward',()=>{au.currentTime=Math.min(au.duration||0,au.currentTime+5);});}
+/* 키보드(PC) */
+document.addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;
+  if(e.code==='Space'){e.preventDefault();$('playBtn').click();}else if(e.code==='ArrowRight')$('nextBtn').click();else if(e.code==='ArrowLeft')$('prevBtn').click();});
+let tt;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2000);}
+(async()=>{await openDB();await scanKeys();await loadTrack(false);})();
+</script>
+</body>
+</html>
